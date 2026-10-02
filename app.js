@@ -59,6 +59,10 @@
   }
   function hashCode() {
     var raw = location.hash.replace(/^#/, '');
+    if (!raw) {
+      var m = location.search.match(/[?&]k=([^&#]+)/);
+      if (m) raw = m[1];
+    }
     try { raw = decodeURIComponent(raw); } catch (e) { /* keep raw */ }
     return normCode(raw);
   }
