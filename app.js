@@ -136,6 +136,7 @@
     setItem('ds2:code', code);
     S.data = data;
     S.meLabel = label(data.me);
+    S.meName = String(data.me.name || '').trim();
     S.items = data.items.slice().sort(function (a, b) { return a.n - b.n; });
     S.byId = {};
     S.items.forEach(function (x, i) { x.i = i; S.byId[x.id] = x; });
@@ -153,9 +154,12 @@
   }
 
   /* ---------- views ---------- */
+  function logo(cls) {
+    return h('img', { class: cls || 'logo', src: 'img/logo.png', alt: '동스푼', width: '134', height: '132' });
+  }
   function topbar(title) {
     if (!title) {
-      return h('header', { class: 'top' }, h('div', { class: 'brand' }, '동스푼', h('span', { class: 'two', text: '2' })));
+      return h('header', { class: 'masthead' }, logo(), h('span', { class: 'season', text: 'Season 2' }));
     }
     return h('header', { class: 'top' },
       h('button', { class: 'back', type: 'button', onclick: backToList, 'aria-label': '목록으로' }, '‹ 목록'),
@@ -188,12 +192,13 @@
       topbar(),
       h('main', { class: 'wrap' },
         h('section', { class: 'hello' },
-          h('p', { class: 'who', text: S.meLabel + '님' }),
-          h('h1', null, '1차 매칭된 분은 ', h('em', { text: S.items.length + '명' }), '이에요'),
-          h('p', { text: '번호를 누르면 프로필과 사진을 볼 수 있어요.' })),
+          h('img', { class: 'plate', src: 'img/plate.png', alt: '', 'aria-hidden': 'true', width: '172', height: '172' }),
+          h('p', { class: 'who', text: S.meLabel + (S.meName ? ' ' + S.meName : '') + '님,' }),
+          h('h1', null, '1차 매칭된 분은', h('br'), S.items.length + '명이에요'),
+          h('p', { class: 'sub', text: '번호를 누르면 프로필과 사진을 볼 수 있어요.' })),
         h('div', { class: 'grid' }, tiles),
         notice(false),
-        h('p', { class: 'foot', text: '동스푼2' })));
+        h('div', { class: 'foot' }, logo('foot-logo'))));
     window.scrollTo(0, S.listY || 0);
   }
 
@@ -218,7 +223,7 @@
     var prev = S.items[x.i - 1], next = S.items[x.i + 1];
     mount(
       topbar(name),
-      h('main', { class: 'wrap' },
+      h('main', { class: 'wrap profile' },
         h('h1', { class: 'pname', text: name }),
         h('section', { class: 'card' }, h('dl', { class: 'fields' }, fields.map(row))),
         rec ? h('section', { class: 'card rec' }, h('dl', { class: 'fields' }, row(rec))) : null,
@@ -293,7 +298,7 @@
       maxlength: '24', placeholder: '코드 16자리', 'aria-label': '개인 코드 16자리'
     });
     mount(h('main', { class: 'gate' },
-      h('p', { class: 'logo' }, '동스푼', h('span', { class: 'two', text: '2' })),
+      logo(),
       h('h1', { text: '개인 링크로 들어와 주세요' }),
       h('p', { text: '카카오톡으로 받은 링크를 누르면 바로 열려요. 링크가 열리지 않으면 링크 맨 끝(# 뒤)의 코드 16자리를 입력해 주세요.' }),
       err ? h('p', { class: 'err', role: 'alert', text: err }) : null,
