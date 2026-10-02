@@ -142,7 +142,7 @@
     S.seenKey = 'ds2:seen:' + data.me.s + data.me.n;
     S.seen = {};
     try { JSON.parse(getItem(S.seenKey) || '[]').forEach(function (id) { S.seen[id] = 1; }); } catch (e) { /* ignore */ }
-    S.wm = watermark(S.meLabel + ' 열람용 · 동스푼2');
+    S.wm = S.meLabel + ' 열람용';
     route();
   }
 
@@ -245,10 +245,9 @@
         var img = h('img', { alt: label(x) + ' 사진 ' + (i + 1), width: u.w, height: u.h, draggable: 'false', decoding: 'async' });
         img.onload = function () { img.classList.add('on'); fig.classList.add('done'); };
         img.src = u.url;
-        var wm = h('div', { class: 'wm', 'aria-hidden': 'true' });
-        wm.style.backgroundImage = S.wm;
         fig.insertBefore(img, fig.firstChild);
-        fig.appendChild(wm);
+        fig.appendChild(h('div', { class: 'shield', 'aria-hidden': 'true' }));
+        fig.appendChild(h('div', { class: 'wm', 'aria-hidden': 'true', text: S.wm }));
       });
       prefetch(S.items[x.i + 1]);
     } catch (e) {
@@ -280,15 +279,6 @@
     if (S.seen[id]) return;
     S.seen[id] = 1;
     setItem(S.seenKey, JSON.stringify(Object.keys(S.seen)));
-  }
-
-  function watermark(text) {
-    var esc = text.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="250" height="150" viewBox="0 0 250 150">' +
-      '<g transform="rotate(-24 125 75)" font-family="-apple-system, \'Apple SD Gothic Neo\', \'Noto Sans KR\', sans-serif" font-size="14" font-weight="700" text-anchor="middle">' +
-      '<text x="126" y="81" fill="#000" fill-opacity="0.18">' + esc + '</text>' +
-      '<text x="125" y="80" fill="#fff" fill-opacity="0.38">' + esc + '</text></g></svg>';
-    return 'url("data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg) + '")';
   }
 
   function loading(msg) {
