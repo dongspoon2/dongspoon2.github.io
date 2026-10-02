@@ -46,13 +46,33 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 /* greeting card: the one decorated element */
 .hello {
   position: relative; overflow: hidden;
-  margin: 2px 0 18px; padding: 22px 20px 20px;
+  margin: 2px 0 18px; padding: 20px 20px 18px;
   background: var(--card); border: 1px solid var(--line); border-radius: 24px;
 }
-.hello .plate { position: absolute; top: -40px; right: -44px; width: 172px; height: 172px; pointer-events: none; }
-.hello .who { position: relative; margin: 0 0 6px; font-size: 16px; font-weight: 600; color: var(--brand-text); padding-right: 104px; }
-.hello h1 { position: relative; margin: 0 0 14px; font-size: 25px; line-height: 1.36; letter-spacing: -0.02em; font-weight: 700; padding-right: 96px; }
+.hello .plate { position: absolute; top: -42px; right: -30px; width: 106px; height: 106px; pointer-events: none; }
+.hello .who { position: relative; margin: 0 0 16px; font-size: 16px; font-weight: 600; color: var(--brand-text); padding-right: 72px; }
+.hello h1 {
+  position: relative; margin: 0 0 12px;
+  font-size: clamp(19px, 5.6vw, 23px); line-height: 1.35; letter-spacing: -0.03em; font-weight: 700;
+  white-space: nowrap;
+}
+.hello .mval {
+  position: relative; display: inline-block; margin: 0 0 16px; padding: 5px 12px;
+  border-radius: 999px; background: var(--cream); color: var(--brand-text);
+  font-size: 14px; font-weight: 600; line-height: 1.5;
+}
+.hello .mval b { color: var(--text); font-weight: 800; }
 .hello .sub { position: relative; margin: 0; padding-top: 12px; border-top: 1px dashed var(--plate); font-size: 14px; color: var(--muted); }
+
+/* link to the 2nd-round selection form */
+.cta {
+  display: flex; align-items: center; justify-content: center;
+  margin: 22px 0 8px; min-height: 56px; padding: 0 16px;
+  border-radius: 16px; background: var(--brand); color: #fff;
+  font-size: 16px; font-weight: 700; letter-spacing: -0.01em; text-decoration: none;
+}
+.cta:active { background: var(--brand-text); }
+.cta-note { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
 
 .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 @media (min-width: 420px) { .grid { gap: 12px; } }
@@ -81,6 +101,9 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .notice h2 { margin: 0 0 6px; font-size: 15px; color: var(--text); }
 .notice ul { margin: 0; padding-left: 18px; }
 .notice li + li { margin-top: 4px; }
+.notice + .notice { margin-top: 12px; }
+.notice.info li { line-height: 1.7; }
+.notice.info li + li { margin-top: 10px; }
 .foot { margin: 22px 0 0; display: flex; justify-content: center; }
 .foot img { height: 28px; width: auto; opacity: .55; }
 

@@ -5,6 +5,12 @@
   var ITER = 150000;
   var ALPHA = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
   var SEX = { M: '남성', F: '여성' };
+  var SELECT_URL = 'https://ambiguous-scilla-52c.notion.site/dongspoon2';
+  var INFO = [
+    '1차 매칭 대상은 기본적으로 정량화할 수 있는 조건 (나이, 키, 학교, 지역 등)을 기준으로 “본인 조건에 부합하는 이성의 조건에 부합하는 본인”, 즉 교집합에 속하는 사람들입니다. 한정된 참여자들 내에서 매칭이 이루어지다보니 조건 교집합에 부합하는 이성의 수가 부족한 경우가 있습니다. 모든 참가자분들께 최소 수의 이성 프로필 제공 보장을 위하여 양쪽의 조건 교집합 수가 적은 경우 자동으로 키/나이 등을 조금씩 +-조절하면서 조합을 생성하도록 자동화하였습니다. 결과적으로 제공받은 이성 프로필 중 본인이 입력했던 정량 조건에 완전히 포함되지 않는 경우가 있을 수 있습니다.',
+    '이성 프로필은 이름/연락처를 제외하고 넘버링 되어 공유되며, 한 페이지에 포함된 정보들이 한 사람의 프로필입니다. 프로필을 확인 후 최대 3명에게 데이트 신청을 할 수 있으며, 본인이 먼저 신청하지 않더라도 상대방이 데이트 신청을 한다면 만나보고 싶은 분을 최대 M명 선택할 수 있습니다.',
+    '이성 프로필 선택은 위 링크 소개팅 안내 페이지의 [이성 선택] 탭의 양식을 작성하시면 되며, 내일 밤인 "10/4(일) 자정까지" 입력을 마쳐주셔야 합니다.'
+  ];
   var app = document.getElementById('app');
   var te = new TextEncoder();
   var td = new TextDecoder();
@@ -175,6 +181,17 @@
         short ? null : h('li', { text: '궁금한 점은 동스푼 운영진에게 카카오톡으로 문의해 주세요.' })));
   }
 
+  function info() {
+    return h('section', { class: 'notice info' },
+      h('h2', { text: '매칭 안내' }),
+      h('ul', null, INFO.map(function (t) { return h('li', { text: t }); })));
+  }
+
+  // Korean copula after a number read aloud: 1 일·3 삼·6 육·7 칠·8 팔·0 영 → 이에요, 2 이·4 사·5 오·9 구 → 예요
+  function copula(n) {
+    return '2459'.indexOf(String(n).slice(-1)) >= 0 ? '예요' : '이에요';
+  }
+
   function showList() {
     document.title = '동스푼2';
     var tiles = S.items.map(function (x) {
@@ -192,12 +209,17 @@
       topbar(),
       h('main', { class: 'wrap' },
         h('section', { class: 'hello' },
-          h('img', { class: 'plate', src: 'img/plate.png', alt: '', 'aria-hidden': 'true', width: '172', height: '172' }),
+          h('img', { class: 'plate', src: 'img/plate.png', alt: '', 'aria-hidden': 'true', width: '106', height: '106' }),
           h('p', { class: 'who', text: S.meLabel + (S.meName ? ' ' + S.meName : '') + '님,' }),
-          h('h1', null, '1차 매칭된 분은', h('br'), S.items.length + '명이에요'),
+          h('h1', { text: '1차 매칭된 분은 ' + S.items.length + '명이에요' }),
+          S.data.m ? h('p', { class: 'mval' },
+            (S.meName || S.meLabel) + '님의 M값은 ', h('b', { text: '“' + S.data.m + '”' }), copula(S.data.m)) : null,
           h('p', { class: 'sub', text: '번호를 누르면 프로필과 사진을 볼 수 있어요.' })),
         h('div', { class: 'grid' }, tiles),
+        h('a', { class: 'cta', href: SELECT_URL, target: '_blank', rel: 'noopener noreferrer' }, '2차 매칭 이성 선택하러 가기'),
+        h('p', { class: 'cta-note', text: '10/4(일) 자정까지 입력해 주세요' }),
         notice(false),
+        info(),
         h('div', { class: 'foot' }, logo('foot-logo'))));
     window.scrollTo(0, S.listY || 0);
   }
